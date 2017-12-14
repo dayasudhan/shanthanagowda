@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sharada Puryanaik</string>
+    <string name="username">spnjds</string>
+    <string name="titletext">Sharada Puryanaik</string>
+    <string name="about_person_description">
+ಶ್ರೀಮತಿ ಶಾರದಾ ಪೂರ್ಯನಾಯ್ಕ"\n"
+ ಶಾಸಕರು, ಶಿವಮೊಗ್ಗ ಗ್ರಾಮಾಂತರ ವಿಧಾನಸಭಾ ಕ್ಷೇತ್ರ "\n"
+"\n"
+ಜೀವನಚರಿತ್ರೆ :-"\n"
+ ಶಾರದಾ ಪೂರ್ಯನಾಯ್ಕ. ಅವರು ಬಾಗಲಕೋಟೆ ಜಿಲ್ಲೆಯ ಶ್ರೀ. ಕೆ. ಜಿ ಲೋಗನಾಥ ಮತ್ತು ಶ್ರೀಮತಿ ಗಂಗು ಬಾಯಿಯ ಪುತ್ರಿ. ಶಿವಮೊಗ್ಗಾ ಮತ್ತು ವಿವಿಧ ನಗರಗಳಿಂದ ಅವರು ತಮ್ಮ ಶಾಲಾ ಶಿಕ್ಷಣವನ್ನು ಮಾಡಿದರು. ನಂತರ ಅವರು ಶಿವಮೊಗ್ಗಾ ರಾಜಕಾರಣಿಯಾಗಿದ್ದ ಶ್ರೀ ಪೂರ್ಯನಾಯ್ಕ ಅವರೊಂದಿಗೆ ವಿವಾಹವಾದರು. ದೀಪಕ್ ಮತ್ತು ಪವನ್ ಎಂಬ ಹೆಸರಿನಿಂದ ಇಬ್ಬರು ಗಂಡುಮಕ್ಕಳಿದ್ದಾರೆ.
+ ಅವರು ಹಾರನಹಳ್ಳಿ ಜ಼ಿಲ್ಲಾ ಪಂಚಾಯತ್ ಗೆದ್ದ ನಂತರ ಶಿವಮೊಗ್ಗಾ ಗ್ರಾಮಾಂತರ  ಎಂಎಲ್ಎ ಆಗಿ ಚುನಾಯಿತರಾದರು.  ಶಾರದಾ ಪೂರ್ಯನಾಯ್ಕ, ಐದು ವರ್ಷದ ಅವಧಿಗೆ ಮೇ 2013 ರಿಂದ ಶಿವಮೊಗ್ಗಾ (ಗ್ರಾಮೀಣ) ಕ್ಷೇತ್ರದ ಶಾಸಕರಾಗಿದ್ದಾರೆ.
+"\n"
+        "\n"
+ಅಲಂಕರಿಸಿಧ ವಿವಿಧ ಸ್ಥಾನಗಳು "\n"
+"\n"
+ಮಾಜಿ. ಜ಼ಿಲ್ಲಾ ಪಂಚಾಯತ್ ಅಧ್ಯಕ್ಷರು
+ಜೆಡಿಎಸ್ ಕೋರ್ ಕಮಿಟಿ ಸದಸ್ಯರು
+"\n"
+        "\n"
+ಮೊಬೈಲ್
+9611004559
+
+    </string>
+    <string name="home">ಮುಖಪುಟ</string>
+    <string name="about_person">"ಶಾರದಾ ಪೂರ್ಯನಾಯ್ಕ ಬಗ್ಗೆ"</string>
+    <string name="as_chief">ಮುಖ್ಯಮಂತ್ರಿಯಾಗಿ</string>
+    <string name="achivements">ಸಾಧನೆಗಳು</string>
+    <string name="janatadarshan">"ಜನತಾ ದರ್ಶನ್ "</string>
+    <string name="manifesto">"ಜೆಡಿಎಸ್ ಪ್ರಣಾಳಿಕೆ"</string>
+    <string name="image_gallery">"ಚಿತ್ರ ಗ್ಯಾಲರಿ "</string>
+    <string name="hdk_tv">ವೀಡಿಯೊ ಗ್ಯಾಲರಿ</string>
+    <string name="suggestion_box_tab">"ನನ್ನನ್ನು ಸಂಪರ್ಕಿಸಿ"</string>
+    <string name="share">ಈ ಅಪ್ಲಿಕೇಶನ್ ಹಂಚಿ</string>
+    <string name="settings_tab">ಸೆಟ್ಟಿಂಗ್</string>
+    <string name="title_select_language">ಬಾಷೆ ಬದಲಾಯಿಸಿ</string>
+    <!--<string name="title_upload_quality">Select language</string>-->
+    <string name="summary_language">ಕನ್ನಡ ಅಥವಾ ಇಂಗ್ಲೀಶ್</string>
+    <string name="tell_friend">ಈ ಅಪ್ಲಿಕೇಶನ್ ಹಂಚಿ</string>
+
+    <string name="hint_name">ಪೂರ್ಣ ಹೆಸರು</string>
+    <string name="hint_email">ಇಮೇಲ್</string>
+    <string name="btn_sign_up">ಪತ್ರ ಕಳುಹಿಸಿ</string>
+    <string name="hint_phone">ದೂರವಾಣಿ ಸಂಖ್ಯೆ</string>
+    <string name="connect_to_person">ಪತ್ರ ಬರೆಯಿರಿK</string>
+
+    <string name="pref_header_about">ನಮ್ಮ ಬಗ್ಗೆ</string>
+    <string name="pref_header_contact_ust">ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ</string>
+    <string name="pref_header_email">kuruvatechnologies@gmail.com</string>
+
+    <string name="summary_about">We are a team of like-minded people from Kuruva Technologies LLP, specialized in development of Android App Development creating new trends across the app space. Glad to Help in anyway!</string>
+
+</resources>
