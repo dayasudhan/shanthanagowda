@@ -2,6 +2,7 @@ package com.kuruvatech.dgshonnali.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,8 @@ public class VideoFragment extends Fragment {
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_FEEDIMAGES = "feedimages";
     private static final String TAG_VIDEO = "feedvideo";
+    private static final String TAG_FEEDVIDEOS = "feedvideos";
+    private static final String TAG_FEEDAUDIOS = "feedaudios";
     private static final String TAG_URL = "url";
   //  RecyclerView recyclerView;
   //  Adapter adapter;
@@ -77,7 +80,8 @@ public class VideoFragment extends Fragment {
         return view;
     }
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
     }
     public void initAdapter()
@@ -106,7 +110,7 @@ public class VideoFragment extends Fragment {
 
 
     public  class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
-        Dialog dialog;
+
         public JSONAsyncTask() {
 
         }
@@ -163,7 +167,32 @@ public class VideoFragment extends Fragment {
                         if (feed_object.has(TAG_DESCRIPTION))
 
                             feedItem.setDescription(TextUtils.htmlEncode(feed_object.getString(TAG_DESCRIPTION)));
+                        if (feed_object.has(TAG_FEEDVIDEOS)) {
+                            JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDVIDEOS);
+                            ArrayList<String> strList = new ArrayList<String>();
+                            strList.clear();
+                            for (int j = 0; j < feedimagesarray.length(); j++) {
+                                JSONObject image_object = feedimagesarray.getJSONObject(j);
+                                if (image_object.has(TAG_URL)) {
+                                    strList.add(image_object.getString(TAG_URL));
+                                }
+                            }
+                            feedItem.setFeedvideos(strList);
 
+                        }
+                        if (feed_object.has(TAG_FEEDAUDIOS)) {
+                            JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDAUDIOS);
+                            ArrayList<String> strList = new ArrayList<String>();
+                            strList.clear();
+                            for (int j = 0; j < feedimagesarray.length(); j++) {
+                                JSONObject image_object = feedimagesarray.getJSONObject(j);
+                                if (image_object.has(TAG_URL)) {
+                                    strList.add(image_object.getString(TAG_URL));
+                                }
+                            }
+                            feedItem.setFeedaudios(strList);
+
+                        }
                         feedList.add(feedItem);
                     }
                     return true;

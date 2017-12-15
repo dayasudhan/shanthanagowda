@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -57,6 +58,9 @@ public class MainFragment extends Fragment {
     public static final String API_KEY = "AIzaSyBRLKO5KlEEgFjVgf4M-lZzeGXW94m9w3U";
     public static final String VIDEO_ID = "gy5_T2ACerk";
     private static final String TAG_TIME = "time";
+    private static final String TAG_FEEDVIDEOS = "feedvideos";
+    private static final String TAG_FEEDAUDIOS = "feedaudios";
+
     Button btnshareApp;
     ArrayList<FeedItem> feedList;
     ArrayList<String> scrollimages;
@@ -75,14 +79,15 @@ public class MainFragment extends Fragment {
 	private Handler handler;
     ScreenSlidePagerAdapter pagerAdapter;
     CirclePageIndicator indicator;
+    CardView video_cardview;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview = inflater.inflate(R.layout.fragment_main, container, false);
         listView = (RecyclerView) rootview.findViewById(R.id.listView_feedlist);
-
-
+        video_cardview = (CardView) rootview.findViewById(R.id.video_cardview);
+        video_cardview.setVisibility(View.GONE);
        // recyclerView=(RecyclerView)view.findViewById(R.id.video_list);
         listView.setHasFixedSize(true);
         //to use RecycleView, you need a layout manager. default is LinearLayoutManager
@@ -100,11 +105,11 @@ public class MainFragment extends Fragment {
 
         isSwipeRefresh = false;
       //  feedList  =session.getLastNewsFeed();
-        if(feedList !=null)
-        {
-            initAdapter();
-        }
-        getFeeds();
+//        if(feedList !=null)
+//        {
+//            initAdapter();
+//        }
+
 
         handler = new Handler();
         pager = (MyViewPager) rootview.findViewById(R.id.pager);
@@ -134,6 +139,10 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light, R.color.colorAccent, R.color.colorPrimaryDark);
         swipeRefreshLayout.setProgressBackgroundColor(android.R.color.transparent);
 
+        feedList = new ArrayList<FeedItem>();
+     //   initfromsession();
+        getFeeds();
+
        return rootview;
     }
 
@@ -146,6 +155,107 @@ public class MainFragment extends Fragment {
     }
 
 
+    public void initfromsession()
+    {
+        String data  = session.getLastNewsFeed();
+
+        if(data == null)
+        {
+            return;
+        }
+        feedList.clear();
+        try {
+            JSONObject feed_object2 = new JSONObject(data);
+
+            if (feed_object2.has(TAG_FEEDS)) {
+                //feed_object2.getString(TAG_FEEDS);
+                JSONArray feedsarray = new JSONArray(feed_object2.getString(TAG_FEEDS));
+
+                for (int i = feedsarray.length() - 1; i >= 0; i--) {
+                    JSONObject feed_object = feedsarray.getJSONObject(i);
+                    FeedItem feedItem = new FeedItem();
+                    if (feed_object.has(TAG_HEADING)) {
+                        feedItem.setHeading(feed_object.getString(TAG_HEADING));
+                    }
+                    if (feed_object.has(TAG_VIDEO)) {
+                        feedItem.setVideoid(feed_object.getString(TAG_VIDEO));
+                    }
+
+                    if (feed_object.has(TAG_DESCRIPTION)) {
+                        feedItem.setDescription(TextUtils.htmlEncode(feed_object.getString(TAG_DESCRIPTION)));
+                    }
+                    if (feed_object.has(TAG_FEEDIMAGES)) {
+                        JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDIMAGES);
+                        ArrayList<String> strList = new ArrayList<String>();
+                        strList.clear();
+                        for (int j = 0; j < feedimagesarray.length(); j++) {
+                            JSONObject image_object = feedimagesarray.getJSONObject(j);
+                            if (image_object.has(TAG_URL)) {
+                                strList.add(image_object.getString(TAG_URL));
+                            }
+                        }
+                        feedItem.setFeedimages(strList);
+
+                    }
+                    if (feed_object.has(TAG_TIME)) {
+                        String time = feed_object.getString(TAG_TIME);
+                        Date getDate = null;
+                        SimpleDateFormat existingUTCFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:s");
+                        SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MMM-yy HH:mm a");
+                        try {
+                            getDate = existingUTCFormat.parse(time);
+                            feedItem.setTime(fmtOut.format(getDate).toString());
+                        } catch (java.text.ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (feed_object.has(TAG_FEEDVIDEOS)) {
+                        JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDVIDEOS);
+                        ArrayList<String> strList = new ArrayList<String>();
+                        strList.clear();
+                        for (int j = 0; j < feedimagesarray.length(); j++) {
+                            JSONObject image_object = feedimagesarray.getJSONObject(j);
+                            if (image_object.has(TAG_URL)) {
+                                strList.add(image_object.getString(TAG_URL));
+                            }
+                        }
+                        feedItem.setFeedvideos(strList);
+
+                    }
+                    if (feed_object.has(TAG_FEEDAUDIOS)) {
+                        JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDAUDIOS);
+                        ArrayList<String> strList = new ArrayList<String>();
+                        strList.clear();
+                        for (int j = 0; j < feedimagesarray.length(); j++) {
+                            JSONObject image_object = feedimagesarray.getJSONObject(j);
+                            if (image_object.has(TAG_URL)) {
+                                strList.add(image_object.getString(TAG_URL));
+                            }
+                        }
+                        feedItem.setFeedaudios(strList);
+
+                    }
+                    feedList.add(feedItem);
+                }
+            }
+            if (feed_object2.has(TAG_SCROLLIMAGES)) {
+                JSONArray feedimagesarray = new JSONArray(feed_object2.getString(TAG_SCROLLIMAGES));
+                scrollimages = new ArrayList<String>();
+                scrollimages.clear();
+                for (int j = 0; j < feedimagesarray.length(); j++) {
+                    JSONObject image_object = feedimagesarray.getJSONObject(j);
+                    if (image_object.has(TAG_URL)) {
+                        scrollimages.add(image_object.getString(TAG_URL));
+                    }
+                }
+            }
+            initAdapter();
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
     public void initAdapter()
     {
 
@@ -160,10 +270,18 @@ public class MainFragment extends Fragment {
         {
             noFeedstv.setVisibility(View.VISIBLE);
         }
-        pagerAdapter.addAll(scrollimages);
-        pager.setAdapter(pagerAdapter);
-        indicator.setViewPager(pager);
-      //  session.setLastNewsFeed(feedList);
+        if(scrollimages.size()>2) {
+            pagerAdapter.addAll(scrollimages);
+            pager.setAdapter(pagerAdapter);
+            indicator.setViewPager(pager);
+            pager.setVisibility(View.VISIBLE);
+            video_cardview.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            video_cardview.setVisibility(View.GONE);
+        }
+
     }
     public void getFeeds()
     {
@@ -216,7 +334,7 @@ public  class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
                     HttpEntity entity = response.getEntity();
 
                     String data = EntityUtils.toString(entity,HTTP.UTF_8);
-
+                    session.setLastNewsFeed(data);
                     //JSONArray feedsarray = new JSONArray(data);
                     JSONObject feed_object2 = new JSONObject(data);
 
@@ -261,6 +379,32 @@ public  class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
                                 } catch (java.text.ParseException e) {
                                     e.printStackTrace();
                                 }
+                            }
+                            if (feed_object.has(TAG_FEEDVIDEOS)) {
+                                JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDVIDEOS);
+                                ArrayList<String> strList = new ArrayList<String>();
+                                strList.clear();
+                                for (int j = 0; j < feedimagesarray.length(); j++) {
+                                    JSONObject image_object = feedimagesarray.getJSONObject(j);
+                                    if (image_object.has(TAG_URL)) {
+                                        strList.add(image_object.getString(TAG_URL));
+                                    }
+                                }
+                                feedItem.setFeedvideos(strList);
+
+                            }
+                            if (feed_object.has(TAG_FEEDAUDIOS)) {
+                                JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDAUDIOS);
+                                ArrayList<String> strList = new ArrayList<String>();
+                                strList.clear();
+                                for (int j = 0; j < feedimagesarray.length(); j++) {
+                                    JSONObject image_object = feedimagesarray.getJSONObject(j);
+                                    if (image_object.has(TAG_URL)) {
+                                        strList.add(image_object.getString(TAG_URL));
+                                    }
+                                }
+                                feedItem.setFeedaudios(strList);
+
                             }
                             feedList.add(feedItem);
                         }

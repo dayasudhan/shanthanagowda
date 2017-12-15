@@ -3,27 +3,36 @@ package com.kuruvatech.dgshonnali.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.google.gson.Gson;
+import com.kuruvatech.dgshonnali.CustomMediaPlayer;
 import com.kuruvatech.dgshonnali.FeedDetail;
 import com.kuruvatech.dgshonnali.R;
 import com.kuruvatech.dgshonnali.RecyclerItemClickListener;
 import com.kuruvatech.dgshonnali.SingleViewActivity;
+import com.kuruvatech.dgshonnali.YouTubePlayerFragmentActivity;
 import com.kuruvatech.dgshonnali.model.FeedItem;
 import com.kuruvatech.dgshonnali.utils.ImageLoader;
 
@@ -63,46 +72,77 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainFragmentIn
 
     @Override
         public void onBindViewHolder(final MainFragmentInfoHolder holder , final int position) {
-        final MainFragmentInfoHolder itemViewHolder = (MainFragmentInfoHolder) holder;
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(con, 2);
-        // provide our CustomSpanSizeLookup which determines how many spans each item in grid will occupy
-        gridLayoutManager.setSpanSizeLookup(new CustomSpanSizeLookup(mFeedList.get(position).getFeedimages().size()));
-        // provide our GridLayoutManager to the view
-        itemViewHolder.itemHolder.recyclerView.setLayoutManager(gridLayoutManager);
-        // this is fake list of images
-        itemViewHolder.itemHolder.recyclerView.setVisibility(View.VISIBLE);
-        itemViewHolder.itemHolder.youTubeThumbnailView.setVisibility(View.VISIBLE);
-        itemViewHolder.itemHolder.frameLayout.setVisibility(View.VISIBLE);
-        final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-            @Override
-            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+            final MainFragmentInfoHolder itemViewHolder = (MainFragmentInfoHolder) holder;
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(con, 2);
+            // provide our CustomSpanSizeLookup which determines how many spans each item in grid will occupy
+            gridLayoutManager.setSpanSizeLookup(new CustomSpanSizeLookup(mFeedList.get(position).getFeedimages().size()));
+            // provide our GridLayoutManager to the view
+            itemViewHolder.itemHolder.recyclerView.setLayoutManager(gridLayoutManager);
+            // this is fake list of images
+            itemViewHolder.itemHolder.recyclerView.setVisibility(View.VISIBLE);
+            itemViewHolder.itemHolder.youTubeThumbnailView.setVisibility(View.VISIBLE);
+            itemViewHolder.itemHolder.frameLayout.setVisibility(View.VISIBLE);
+            itemViewHolder.itemHolder.frameLayout2.setVisibility(View.VISIBLE);
+            final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                @Override
+                public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
 
             }
 
-            @Override
-            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-                youTubeThumbnailView.setVisibility(View.VISIBLE);
-                itemViewHolder.itemHolder.relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
-            }
-        };
-        if (mFeedList.get(position).getVideoid().equals("")) {
-            itemViewHolder.itemHolder.youTubeThumbnailView.setVisibility(View.GONE);
-            itemViewHolder.itemHolder.frameLayout.setVisibility(View.GONE);
-        } else {
-            itemViewHolder.itemHolder.youTubeThumbnailView.initialize(API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
                 @Override
-                public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
-                    youTubeThumbnailLoader.setVideo(mFeedList.get(position).getVideoid());
-                    youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                    youTubeThumbnailView.setVisibility(View.VISIBLE);
+                    itemViewHolder.itemHolder.relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
                 }
+            };
+            if (mFeedList.get(position).getFeedvideos().size()>0 || mFeedList.get(position).getFeedaudios().size() > 0) {
+                itemViewHolder.itemHolder.youTubeThumbnailView.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.frameLayout.setVisibility(View.GONE);
+                Uri video;
+                if(mFeedList.get(position).getFeedvideos().size()>0 )
+                 video = Uri.parse(mFeedList.get(position).getFeedvideos().get(0));
+                else
+                 video = Uri.parse(mFeedList.get(position).getFeedaudios().get(0));
+                itemViewHolder.itemHolder.videoview.setVideoURI(video);
+                itemViewHolder.itemHolder.videoview.requestFocus();
+                itemViewHolder.itemHolder.videoview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-                @Override
-                public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
-                    //write something for failure
-                }
-            });
-        }
-        itemViewHolder.itemHolder.imageshareButton.setOnClickListener(new View.OnClickListener() {
+                    public void onPrepared(MediaPlayer mp) {
+
+                        itemViewHolder.itemHolder.videoview.requestLayout();
+                        itemViewHolder.itemHolder.progressBar.setVisibility(View.GONE);
+                        itemViewHolder.itemHolder.videoview.seekTo(1000);
+                    }
+                });
+
+
+            } else if(!mFeedList.get(position).getVideoid().equals("")){
+                itemViewHolder.itemHolder.frameLayout2.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.videoview.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.progressBar.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.playButton.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.youTubeThumbnailView.initialize(API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+                        youTubeThumbnailLoader.setVideo(mFeedList.get(position).getVideoid());
+                        youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                        //write something for failure
+                    }
+                });
+            }
+            else {
+                itemViewHolder.itemHolder.frameLayout2.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.videoview.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.progressBar.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.playButton.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.youTubeThumbnailView.setVisibility(View.GONE);
+                itemViewHolder.itemHolder.frameLayout.setVisibility(View.GONE);
+            }
+            itemViewHolder.itemHolder.imageshareButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -186,7 +226,19 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainFragmentIn
             itemViewHolder.itemHolder.btShowmore.setVisibility(View.GONE);
         }
 
-
+        itemViewHolder.itemHolder.playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(con, CustomMediaPlayer.class);
+                String video = new String();
+                if(!mFeedList.get(position).getFeedvideos().isEmpty() )
+                    video = mFeedList.get(position).getFeedvideos().get(0);
+                else
+                    video = mFeedList.get(position).getFeedaudios().get(0);
+                intent.putExtra("url", video);
+                con.startActivity(intent);
+            }
+        });
 
         }
 
@@ -221,6 +273,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainFragmentIn
                 itemHolder.relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_over_youtube_thumbnail);
                 itemHolder.youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
                 itemHolder.imagePlayBotton.setOnClickListener(this);
+                itemHolder.videoview = (VideoView) view.findViewById(R.id.VideoView);
+                itemHolder.playButton = (ImageView) itemView.findViewById(R.id.btnvideo_player);
+                itemHolder.progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar2);
+                itemHolder.frameLayout2 = (FrameLayout)view.findViewById(R.id.framelayout2);
 //                if( mFeedList.get(position).getVideoid().length() > 0) {
 //                    youTubeThumbnailView = (YouTubeThumbnailView)view.findViewById(R.id.youtubethumbnailview);
 //                    youTubeThumbnailView.setTag(mFeedList.get(position).getVideoid());
@@ -283,5 +339,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainFragmentIn
         ImageView imagePlayBotton;
         YouTubeThumbnailView youTubeThumbnailView;
         protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
+        VideoView videoview;
+        ProgressBar progressBar ;
+        //        ProgressDialog pDialog;
+        ImageView playButton;
+        FrameLayout frameLayout2;;
     }
     }

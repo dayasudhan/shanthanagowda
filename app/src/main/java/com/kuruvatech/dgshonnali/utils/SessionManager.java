@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kuruvatech.dgshonnali.model.FeedItem;
 
 import java.util.ArrayList;
@@ -57,10 +58,10 @@ public class SessionManager {
 	public static final String KEY_SLIDER_LOGO = "slider";
 	public static final String KEY_LAST_PN = "last_pn";
 
-	public static final String KEY_FEED_NEWS_HEADING = "NEWS_FEED_HEADING";
-	public static final String KEY_FEED_NEWS_DESCRIPTION = "NEWS_FEED_DESCRIPTION";
-	public static final String KEY_FEED_NEWS_IMAGES = "NEWS_FEED_IMAGES";
-	public static final String KEY_FEED_NEWS_VIDEO = "NEWS_FEED_VIDEO";
+
+	public static final String KEY_FEED_NEWS = "NEWS_FEED";
+	public static final String KEY_FEED_IMAGES = "IMAGES_FEED";
+	public static final String KEY_FEED_VIDEOS = "VIDEOS_FEED";
 
 	// Constructor
 	public  boolean hasAddress=false;
@@ -244,75 +245,39 @@ public class SessionManager {
 		editor.commit();
 	}
 
-	public void setLastNewsFeed(ArrayList<FeedItem> feedList)
+
+
+
+	public void setLastNewsFeed(String feedList)
 	{
-		Gson gson = new Gson();
-		//String json = gson.toJson(news);
-		List<String> heading =  new ArrayList<String>();
-		List<String> description =  new ArrayList<String>();
-		List<String> images =  new ArrayList<String>();
-		List<String> video =  new ArrayList<String>();
-		for(int i = 0 ; i < feedList.size();i++) {
-			heading.add(feedList.get(i).getHeading());
-			description.add(feedList.get(i).getDescription());
-			if(feedList.get(i).getFeedimages().size()> 0)
-				images.add(feedList.get(i).getFeedimages().get(0));
-			else
-			{
-				images.add(null);
-			}
-			video.add(feedList.get(i).getVideoid());
-		}
-		String jsonHEADING = gson.toJson(heading);
-		String jsonDESCRIPTION = gson.toJson(description);
-		String jsonIMAGES = gson.toJson(images);
-		String jsonVIDEO = gson.toJson(video);
-		editor.putString(KEY_FEED_NEWS_HEADING,jsonHEADING);
-		editor.putString(KEY_FEED_NEWS_DESCRIPTION,jsonDESCRIPTION);
-		editor.putString(KEY_FEED_NEWS_IMAGES,jsonIMAGES);
-		editor.putString(KEY_FEED_NEWS_VIDEO,jsonVIDEO);
+		editor.putString(KEY_FEED_NEWS,feedList);
 		editor.commit();
-
-
 	}
-	public ArrayList<FeedItem> getLastNewsFeed()
+	public String getLastNewsFeed()
 	{
-		String headings = pref.getString(KEY_FEED_NEWS_HEADING, null);
-		String descriptions = pref.getString(KEY_FEED_NEWS_DESCRIPTION, null);
-		String images = pref.getString(KEY_FEED_NEWS_IMAGES, null);
-		String videos = pref.getString(KEY_FEED_NEWS_VIDEO, null);
-		List<String> heading =  null;
-		List<String> description =  null;
-		List<String> imagelist =  null;
-		List<String> video =  null;
-		if(headings != null) {
-			Gson gson = new Gson();
-			heading = (List<String>) gson.fromJson(headings, Object.class);
-		}
-		if(descriptions != null) {
-			Gson gson = new Gson();
-			description = (List<String>) gson.fromJson(descriptions, Object.class);
-		}
-		if(images != null) {
-			Gson gson = new Gson();
-			imagelist = (List<String>) gson.fromJson(images, Object.class);
-		}
-		if(videos != null) {
-			Gson gson = new Gson();
-			video = (List<String>) gson.fromJson(videos, Object.class);
-		}
-		ArrayList<FeedItem> feedlist  = new ArrayList<FeedItem>();
-		if(heading != null) {
-			for (int i = 0; i < heading.size(); i++) {
-				FeedItem feedItem = new FeedItem();
-				feedItem.setHeading(heading.get(i));
-				feedItem.setDescription(description.get(i));
-				//feedItem.setFeedimages(imagelist);
-				feedItem.setVideoid(video.get(i));
-				feedlist.add(feedItem);
-			}
-		}
-		return feedlist;
+		String list = pref.getString(KEY_FEED_NEWS, null);
+		return list;
+	}
+
+	public void setLastImagesFeed(String feedList)
+	{
+		editor.putString(KEY_FEED_IMAGES,feedList);
+		editor.commit();
+	}
+	public String getLastImagesFeed()
+	{
+		String list = pref.getString(KEY_FEED_IMAGES, null);
+		return list;
+	}
+	public void setLastVideoFeed(String feedList)
+	{
+		editor.putString(KEY_FEED_VIDEOS,feedList);
+		editor.commit();
+	}
+	public String getLastVideoFeed()
+	{
+		String list = pref.getString(KEY_FEED_VIDEOS, null);
+		return list;
 	}
 	public void setName(String orderId)
 	{

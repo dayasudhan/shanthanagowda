@@ -64,13 +64,14 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     private RelativeLayout layout;
     private DrawerLayout dLayout;
     SessionManager session;
-    LinearLayout navHead;
+    RelativeLayout navHead;
     TextView name,email,phno;
     private boolean isMainFragmentOpen;
     private boolean isdrawerbackpressed;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private boolean fromUser=true;
+    ViewPagerAdapter adapter;
     Toolbar tb;
     public boolean isOnline(Context context) {
         ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         navView.setItemIconTintList(null);
         View hView =  navView.inflateHeaderView(R.layout.header);
-        navHead = (LinearLayout) hView.findViewById(R.id.profileinfo);
+        navHead = (RelativeLayout) hView.findViewById(R.id.profileinfo);
 //        name = (TextView) hView.findViewById(R.id.myNameHeader);
 //        phno = (TextView) hView.findViewById(R.id.phNoHeader);
 //        email = (TextView)hView.findViewById(R.id.eMailHeader);
