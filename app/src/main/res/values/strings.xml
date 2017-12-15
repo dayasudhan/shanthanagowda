@@ -3,27 +3,38 @@
 		 <string name="username">test3</string>
 		 <string name="titletext">D G ShanthanaGowdru</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="about_person_description">Party:INC "\n"
+    <string name="about_person_description">
+        D G Shanthanagowdru , "\n"
+        Honoularable MLA Honnali "\n" "\n"
+        Party:India National Congress "\n" "\n"
         S/o D.G. Shankarappa Gowda
-        "\n"
-        Age: 65
-        "\n"
+        "\n" "\n"
+        Age: 70
+        "\n" "\n"
         Address:
-        "\n"
+        "\n" "\n"
         Benakanahalli Village,
         "\n"
         Honnali Taluk,
         "\n"
         Davanagere District
-        "\n"
+        "\n" "\n"
         Contact Number: 9845355224
-        "\n"
+        "\n" "\n"
         Self Profession:Agriculture
-        "\n"
-        Educational Details
+        "\n" "\n"
+        Educational Details "\n"
 
-          B.Sc Graduate, Jabin Sience college, hubli
-
+          B.Sc Graduate, Jabin Sience college, hubli "\n" "\n"
+Biography."\n"
+DG Shantanagowda was a great landlord since the British era, an ancestral home with about 3500 acres of land. His father was a Doddamane Benakkanahalli Shankarappa Gowdru, a British Government MRA.
+He has two children .. First, Basavanagowdru .. Second son Shantanagowdru .. He has created many villages as a great landowner, and has provided free donation for poor families living there ...
+"\n""\n"
+Political background"\n"
+His yelder brother Basavanagowda was an independent candidate in 1982 when he was elected as MLA from Honnali. In 1985 he joined the Janata Dal and won the second term from Honnali,
+After his demise, DG Shantanagowdru was an independent candidate in 1999 and enetered vidhansoudha for first time and is now the second time elected from Congress party in 2013
+Honnali. The family of Shantanagowda has so far made 13 elections, winning 4 of them, and losing 9 elections.
+        "\n""\n"
     </string>
     <string name="title_activity_splash" translatable="false">SplashActivity</string>
     <string name="home">Home</string>
