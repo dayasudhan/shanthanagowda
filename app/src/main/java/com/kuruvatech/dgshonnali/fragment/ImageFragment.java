@@ -20,6 +20,7 @@ import com.kuruvatech.dgshonnali.RecyclerItemClickListener;
 import com.kuruvatech.dgshonnali.adapter.Adapter;
 import com.kuruvatech.dgshonnali.model.FeedItem;
 import com.kuruvatech.dgshonnali.utils.Constants;
+import com.kuruvatech.dgshonnali.utils.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,9 +44,9 @@ public class ImageFragment extends Fragment {
     RecyclerView recyclerView;
     Adapter adapter;
    // boolean isSwipeRefresh =true;
-    ArrayList<FeedItem> feedList;
-    ArrayList<String> imageList;
 
+    ArrayList<String> imageList;
+    SessionManager session;
     //private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,11 +59,13 @@ public class ImageFragment extends Fragment {
 //            swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 //            isSwipeRefresh = false;
             recyclerView = (RecyclerView) view;
-
+            session = new SessionManager(getActivity().getApplicationContext());
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
             // provide our CustomSpanSizeLookup which determines how many spans each item in grid will occupy
             gridLayoutManager.setSpanSizeLookup(new CustomSpanSizeLookup());
             recyclerView.setLayoutManager(gridLayoutManager);
+            imageList = new ArrayList<String>();
+            initfromsession();
             getImages();
             recyclerView.addOnItemTouchListener(
                     new RecyclerItemClickListener(getActivity(),0,recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
@@ -100,6 +103,31 @@ public class ImageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+    public void initfromsession()
+    {
+        String data  = session.getLastImagesFeed();
+
+        if(data == null)
+        {
+            return;
+        }
+        imageList.clear();
+        try
+        {
+            JSONArray feedimagesarray = new JSONArray(data);
+            for (int j = 0; j < feedimagesarray.length(); j++) {
+                JSONObject image_object = feedimagesarray.getJSONObject(j);
+                if (image_object.has(TAG_URL)) {
+                    imageList.add(image_object.getString(TAG_URL));
+                }
+            }
+            initAdapter();
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
     public void initAdapter()
     {
@@ -160,6 +188,7 @@ public class ImageFragment extends Fragment {
                 if (status == 200) {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity, HTTP.UTF_8);
+                    session.setLastImagesFeed(data);
                     JSONArray feedimagesarray = new JSONArray(data);
                     imageList.clear();
                     for (int j = 0; j < feedimagesarray.length(); j++) {

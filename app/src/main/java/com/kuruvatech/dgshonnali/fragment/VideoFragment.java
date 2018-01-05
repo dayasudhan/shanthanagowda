@@ -20,6 +20,7 @@ import com.kuruvatech.dgshonnali.R;
 import com.kuruvatech.dgshonnali.adapter.YoutubeRecyclerAdapter;
 import com.kuruvatech.dgshonnali.model.FeedItem;
 import com.kuruvatech.dgshonnali.utils.Constants;
+import com.kuruvatech.dgshonnali.utils.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,10 +48,10 @@ public class VideoFragment extends Fragment {
   //  Adapter adapter;
     boolean isSwipeRefresh =true;
     ArrayList<FeedItem> feedList;
-    ArrayList<String> imageList;
+
     RecyclerView recyclerView;
     YoutubeRecyclerAdapter adapter;
-
+    SessionManager session;
     private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,12 +60,15 @@ public class VideoFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         recyclerView=(RecyclerView)view.findViewById(R.id.video_list);
         recyclerView.setHasFixedSize(true);
+        session = new SessionManager(getActivity().getApplicationContext());
         //to use RecycleView, you need a layout manager. default is LinearLayoutManager
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
     //    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         isSwipeRefresh = false;
+        feedList = new ArrayList<FeedItem>();
+        initfromsession();
         getVideos();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -83,6 +87,66 @@ public class VideoFragment extends Fragment {
     public void onResume()
     {
         super.onResume();
+    }
+    public void initfromsession()
+    {
+        String data  = session.getLastVideoFeed();
+
+        if(data == null)
+        {
+            return;
+        }
+        feedList.clear();
+        try
+        {
+            JSONArray feedsarray = new JSONArray(data);
+            for (int i = 0; i < feedsarray.length(); i++) {
+                JSONObject feed_object = feedsarray.getJSONObject(i);
+                FeedItem feedItem = new FeedItem();
+                if (feed_object.has(TAG_HEADING)) {
+                    feedItem.setHeading(feed_object.getString(TAG_HEADING));
+                }
+                if (feed_object.has(TAG_VIDEO)) {
+                    feedItem.setVideoid(feed_object.getString(TAG_VIDEO));
+                }
+
+                if (feed_object.has(TAG_DESCRIPTION))
+
+                    feedItem.setDescription(TextUtils.htmlEncode(feed_object.getString(TAG_DESCRIPTION)));
+                if (feed_object.has(TAG_FEEDVIDEOS)) {
+                    JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDVIDEOS);
+                    ArrayList<String> strList = new ArrayList<String>();
+                    strList.clear();
+                    for (int j = 0; j < feedimagesarray.length(); j++) {
+                        JSONObject image_object = feedimagesarray.getJSONObject(j);
+                        if (image_object.has(TAG_URL)) {
+                            strList.add(image_object.getString(TAG_URL));
+                        }
+                    }
+                    feedItem.setFeedvideos(strList);
+
+                }
+                if (feed_object.has(TAG_FEEDAUDIOS)) {
+                    JSONArray feedimagesarray = feed_object.getJSONArray(TAG_FEEDAUDIOS);
+                    ArrayList<String> strList = new ArrayList<String>();
+                    strList.clear();
+                    for (int j = 0; j < feedimagesarray.length(); j++) {
+                        JSONObject image_object = feedimagesarray.getJSONObject(j);
+                        if (image_object.has(TAG_URL)) {
+                            strList.add(image_object.getString(TAG_URL));
+                        }
+                    }
+                    feedItem.setFeedaudios(strList);
+
+                }
+                feedList.add(feedItem);
+            }
+            initAdapter();
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
     public void initAdapter()
     {
@@ -146,13 +210,13 @@ public class VideoFragment extends Fragment {
 
                 int status = response.getStatusLine().getStatusCode();
 
-                feedList = new ArrayList<FeedItem>();
+
                 feedList.clear();
                 if (status == 200) {
                     HttpEntity entity = response.getEntity();
 
                     String data = EntityUtils.toString(entity,HTTP.UTF_8);
-
+                    session.setLastVideoFeed(data);
                     JSONArray feedsarray = new JSONArray(data);
                     for (int i = 0; i < feedsarray.length(); i++) {
                         JSONObject feed_object = feedsarray.getJSONObject(i);

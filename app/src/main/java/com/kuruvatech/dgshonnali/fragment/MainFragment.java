@@ -80,6 +80,7 @@ public class MainFragment extends Fragment {
     ScreenSlidePagerAdapter pagerAdapter;
     CirclePageIndicator indicator;
     CardView video_cardview;
+    boolean isResponsereceived = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,8 +131,12 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                isSwipeRefresh = true;
-                getFeeds();
+                swipeRefreshLayout.setRefreshing(false);
+//                if(isResponsereceived) {
+//                    isSwipeRefresh = true;
+//                    isResponsereceived = false;
+//                    getFeeds();
+//                }
             }
 
         });
@@ -140,7 +145,7 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setProgressBackgroundColor(android.R.color.transparent);
 
         feedList = new ArrayList<FeedItem>();
-     //   initfromsession();
+        initfromsession();
         getFeeds();
 
        return rootview;
@@ -328,7 +333,7 @@ public  class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
 
                 int status = response.getStatusLine().getStatusCode();
 
-                feedList = new ArrayList<FeedItem>();
+                //feedList = new ArrayList<FeedItem>();
                 feedList.clear();
                 if (status == 200) {
                     HttpEntity entity = response.getEntity();
@@ -443,6 +448,7 @@ public  class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
             if(swipeRefreshLayout != null)
              swipeRefreshLayout.setRefreshing(false);
             isSwipeRefresh = false;
+            isResponsereceived = true;
             if(getActivity() != null) {
                 if (result == false) {
 

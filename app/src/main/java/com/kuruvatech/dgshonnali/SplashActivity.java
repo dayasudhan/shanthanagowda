@@ -36,7 +36,7 @@ public class SplashActivity extends Activity implements Animation.AnimationListe
                 try{
                   //  splashOneLogo.startAnimation(animLogo);
              //       splashImage.startAnimation(animBike);
-                    sleep(5000);
+                    sleep(2000);
 
                 }catch(Exception e){
                     e.printStackTrace();

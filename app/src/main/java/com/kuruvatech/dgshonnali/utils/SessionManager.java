@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.kuruvatech.dgshonnali.model.FeedItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +60,7 @@ public class SessionManager {
 	public static final String KEY_FEED_NEWS = "NEWS_FEED";
 	public static final String KEY_FEED_IMAGES = "IMAGES_FEED";
 	public static final String KEY_FEED_VIDEOS = "VIDEOS_FEED";
+	public static final String KEY_FEED_MANIFESTO = "MANIFESTO_FEED";
 
 	// Constructor
 	public  boolean hasAddress=false;
@@ -250,6 +249,7 @@ public class SessionManager {
 
 	public void setLastNewsFeed(String feedList)
 	{
+		editor.putString(KEY_FEED_NEWS,null);
 		editor.putString(KEY_FEED_NEWS,feedList);
 		editor.commit();
 	}
@@ -261,6 +261,7 @@ public class SessionManager {
 
 	public void setLastImagesFeed(String feedList)
 	{
+		editor.putString(KEY_FEED_IMAGES,null);
 		editor.putString(KEY_FEED_IMAGES,feedList);
 		editor.commit();
 	}
@@ -271,12 +272,24 @@ public class SessionManager {
 	}
 	public void setLastVideoFeed(String feedList)
 	{
+		editor.putString(KEY_FEED_VIDEOS,null);
 		editor.putString(KEY_FEED_VIDEOS,feedList);
 		editor.commit();
 	}
 	public String getLastVideoFeed()
 	{
 		String list = pref.getString(KEY_FEED_VIDEOS, null);
+		return list;
+	}
+	public void setManifestFeed(String feedList)
+	{
+		editor.putString(KEY_FEED_MANIFESTO,null);
+		editor.putString(KEY_FEED_MANIFESTO,feedList);
+		editor.commit();
+	}
+	public String getManifestoFeed()
+	{
+		String list = pref.getString(KEY_FEED_MANIFESTO, null);
 		return list;
 	}
 	public void setName(String orderId)
